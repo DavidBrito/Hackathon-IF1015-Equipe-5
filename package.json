@@ -1,0 +1,26 @@
+{
+  "name": "hackathon-if1015-equipe-5",
+  "version": "1.0.0",
+  "description": "Repositório do projeto &lt;> da Hackahton realizada no curso de Sistemas Distribuídos do CIN/UFPE",
+  "main": "DataStreamReader.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidBrito/Hackathon-IF1015-Equipe-5.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DavidBrito/Hackathon-IF1015-Equipe-5/issues"
+  },
+  "homepage": "https://github.com/DavidBrito/Hackathon-IF1015-Equipe-5#readme",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.3.7",
+    "@grpc/proto-loader": "^0.6.4",
+    "amqplib": "^0.8.0",
+    "csv-parse": "^4.16.0",
+    "grpc": "^1.24.11"
+  }
+}
