@@ -1,0 +1,8 @@
+{
+    "execMap": {
+      "js": "sucrase-node",
+      "comment":"node --inspect -r sucrase/register"
+    },
+    "ignore": ["__tests__"]
+}
+  

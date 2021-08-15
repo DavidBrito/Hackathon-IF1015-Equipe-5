@@ -8,5 +8,5 @@ const client = new subService.ReceiveBusMessages("localhost:4000",
 grpc.credentials.createInsecure());
 
 client.connectToQueue({'queuename': 'hello'}, (err, response) => {
-     
+    response = "[a,c,c,d]"
  });

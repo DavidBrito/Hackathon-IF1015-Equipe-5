@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package subService;
+
+message BusMessage {
+    string businfo = 1;
+}
+
+message Queue {
+    string queuename = 1;
+}
+
+service ReceiveBusMessages {
+    rpc connectToQueue(Queue) returns (BusMessage) {}
+}
