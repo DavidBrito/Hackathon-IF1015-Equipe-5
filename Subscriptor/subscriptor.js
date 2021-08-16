@@ -20,6 +20,8 @@ console.log("Waiting for client...")
 server.start()
 
 function consumeQueue(call, callback) {
+
+
   amqp.connect('amqp://localhost', (error0, conn) => {
     if (error0) {
       throw error0;

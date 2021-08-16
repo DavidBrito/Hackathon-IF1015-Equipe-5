@@ -16,15 +16,11 @@ routes.get('/', (req, res) => {
 });
 
 routes.get('/hello', (req, res) => {
-    return Client.connectToQueue({'queuename': 'hello'}, (err, response) => {
+    return Client.consumeQueue({'busid': '1111'}, (err, response) => {
         return res.status(200).json({
             response
         });
     });
 });
-
-
-
-
 
 export default routes;
