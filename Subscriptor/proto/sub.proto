@@ -1,15 +1,16 @@
 syntax = "proto3";
 
-package subService;
+package busLocationService;
 
-message BusMessage {
+message BusIdRequest {
+    string busid = 1;
+}
+
+message BusReply {
     string businfo = 1;
 }
 
-message Queue {
-    string queuename = 1;
+service BusLocation {
+    rpc consumeQueue(BusIdRequest) returns (stream BusReply) {}
 }
 
-service ReceiveBusMessages {
-    rpc connectToQueue(Queue) returns (BusMessage) {}
-}

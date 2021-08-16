@@ -32,7 +32,6 @@ amqp.connect('amqp://localhost', function (error0, connection) {
             .on('data', async (row) => {
                 try {
                     let busID = row[0]
-                    console.log(row)
                     let row_c = JSON.stringify(row)
 
                     dataReadStream.pause()
@@ -54,4 +53,3 @@ amqp.connect('amqp://localhost', function (error0, connection) {
             });
     });
 });
-
