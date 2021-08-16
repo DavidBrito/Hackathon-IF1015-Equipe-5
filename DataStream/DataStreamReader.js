@@ -19,10 +19,10 @@ amqp.connect('amqp://localhost', function (error0, connection) {
         if (error1) {
             throw error1;
         }
-        var exchange = 'transport';
+        var exchange = 'topic_transport';
 
         //logica para buscar os dados no csv
-        channel.assertExchange(exchange, 'direct', {
+        channel.assertExchange(exchange, 'topic', {
             durable: false
         });
 
@@ -30,24 +30,23 @@ amqp.connect('amqp://localhost', function (error0, connection) {
         var dataReadStream = fs.createReadStream('data/bus_data_1.csv')
             .pipe(parseCSV({ delimiter: ',', from_line: 2, to_line: 1000, relax: true }))
             .on('data', async (row) => {
-                //let busID = row[2]
-                // console.log(busID)
                 try {
+                    let busID = row[0]
                     console.log(row)
-                    dataReadStream.pause()
+                    let row_c = JSON.stringify(row)
 
+                    dataReadStream.pause()
+                
                     setTimeout(function () {
-                        //${row[0]}-${row[1]}-${row[2]}
-                        channel.sendToQueue('test', Buffer.from(JSON.stringify(row)));
-                        console.log("Pub sent %s", JSON.stringify(row));
+                        channel.publish(exchange, busID, Buffer.from(row_c));
+                        console.log("Pub sent %s", row_c);
                         dataReadStream.resume()
-                    }, 1000);
+                    }, 500);
 
                 } catch (error) {
                     console.log(error)
                 }
-                // TODO: Esse comando é uma fila para cada busID?? **
-                // channel.publish(exchange, busID, Buffer.from(busData));
+                
             }).on('end', () => {
                 console.log("Dados CSV fim");
                 connection.close();

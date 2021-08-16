@@ -26,27 +26,26 @@ amqp.connect('amqp://localhost', function(error0, connection) {
     if (error1) {
       throw error1;
     }
-    var exchange = 'transport';
+    var exchange = 'topic_transport';
  
-    channel.assertExchange(exchange, 'direct', {
+    channel.assertExchange(exchange, 'topic', {
       durable: false
     });
  
-    channel.assertQueue('test', {
-      exclusive: true
+    channel.assertQueue('', {
+      durable: false
     }, function(error2, q) {
       if (error2) {
         throw error2;
       }
       console.log("Waiting for message")
-      
-      //channel.bindQueue(q.queue, exchange, '');
- 
-      // ** Apenas teste
 
-      channel.consume('test', function(msg) {
+      channel.bindQueue(q.queue, exchange, '12111'); //input de teste
+
+      channel.consume(q.queue, function(msg) {
         if(msg.content) {
-            console.log(msg.content.toString());
+          //a queue recebeu uma mensagem
+          console.log(msg.content.toString());
           }
       }, {
         noAck: true
