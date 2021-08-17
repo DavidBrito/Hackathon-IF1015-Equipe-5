@@ -9,12 +9,16 @@ import {
 } from "@material-ui/lab"
 //Leaflet
 import L from 'leaflet';
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import getDistance from 'geolib/es/getDistance';
 
 const Home = () => {
     // estado, funcao que altera o estado - valor inicial em 0
     const [ map, setMap ] = useState();
     const [ selectedBus, setSelectedBus ] = useState('1111');
     const [ connection, setConnection ] = useState();
+    const [ userPosition, setUserPosition] = useState();
 
     const [ markers, setMarkers ] = useState();
     // permite controlar as renderizacoes do componente, sempre que renderizar chama useEffect()
@@ -35,10 +39,18 @@ const Home = () => {
         }).addTo(map);
 
         const layerGroup = L.layerGroup().addTo(map);
-        
+        const userPos = L.marker(position).addTo(map);
+        const userCircle = L.circle(position, {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 3000
+        }).addTo(map);
         // marcacao no mapa
         setMarkers(layerGroup);
         setMap(map);
+
+        setUserPosition(userPos)
 
         // Antes do userEffect renderizar aplica a funcao setMap(null) para nao ficar um mapa em cima do outro.
         return () => {
@@ -59,6 +71,19 @@ const Home = () => {
 
                 const item = L.utm({x: serverMessage[6], y: serverMessage[7], zone: 25, southHemi: true});
                 const coord = item.latLng();
+
+                console.log("Calculating distance");
+
+                const geoDistance = new Observable(subscriber => {
+                    subscriber.next(
+                        getDistance(
+                            { latitude: -8.0532143, longitude: -34.923340 },
+                            { latitude: coord.lat, longitude: coord.lng })
+                    )
+                }).pipe(filter(x => x < 3000));
+                geoDistance.subscribe(x => {
+                  console.log("Seu ônibus está à" + x/1000 + "km de distância");
+                });
 
                 setMarkers((prevMarkers) => {
                     if (prevMarkers) {
