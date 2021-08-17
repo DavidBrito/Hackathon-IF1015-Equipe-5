@@ -4,11 +4,17 @@ import path from 'path';
 
 class Proto {
     constructor() {
-        const packageDef = loadSync(path.resolve(__dirname, "sub.proto"), {});
+        const packageDef = loadSync(path.resolve(__dirname, "mybusfinder.proto"), {});
         const grpcObject = grpc.loadPackageDefinition(packageDef);
-        const subService = grpcObject.subService;
-        this.client = new subService.ReceiveBusMessages(
+        const myBusFinder = grpcObject.myBusFinder;
+
+        this.clientBusLocation = new myBusFinder.BusLocation(
             "localhost:4000",
+            grpc.credentials.createInsecure()
+        );
+
+        this.clientDataStream = new myBusFinder.DataStream(
+            "localhost:4001", 
             grpc.credentials.createInsecure()
         );
     }
@@ -16,4 +22,5 @@ class Proto {
 const proto = new Proto();
 
 export default proto;
-export const Client = proto.client;
+export const ClientBusLocation = proto.clientBusLocation;
+export const ClientDataStream = proto.clientDataStream;

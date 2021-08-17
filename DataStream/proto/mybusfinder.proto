@@ -1,6 +1,18 @@
 syntax = "proto3";
 
-package busLocationService;
+package myBusFinder;
+
+message StreamDelay {
+    int32 delay = 1;
+}
+
+message Empty {
+
+}
+
+service DataStream {
+    rpc startDataStream(StreamDelay) returns (Empty) {}
+}
 
 message BusIdRequest {
     string busid = 1;
@@ -13,4 +25,3 @@ message BusReply {
 service BusLocation {
     rpc consumeQueue(BusIdRequest) returns (stream BusReply) {}
 }
-

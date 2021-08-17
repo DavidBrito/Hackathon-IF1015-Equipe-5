@@ -2,14 +2,15 @@
 
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
-const packageDef = protoLoader.loadSync("proto/sub.proto", {});
+const packageDef = protoLoader.loadSync("proto/mybusfinder.proto", {});
 const grpcObject = grpc.loadPackageDefinition(packageDef);
-const busLocationService = grpcObject.busLocationService;
+const myBusFinder = grpcObject.myBusFinder;
 
-const client = new busLocationService.BusLocation("localhost:4000", 
+const client = new myBusFinder.BusLocation("localhost:4000", 
 grpc.credentials.createInsecure());
 
-var call = client.consumeQueue({'busid': '1111'}, (err, response) => {
+// testar com 12113, 12452
+var call = client.consumeQueue({'busid': '12113'}, (err, response) => {
     console.log(err)
 
 });

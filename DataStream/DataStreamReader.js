@@ -21,8 +21,8 @@ amqp.connect('amqp://localhost', function (error0, connection) {
         });
 
         // le o arquivo de dados e publica na fila de mensagens cada linha
-        var dataReadStream = fs.createReadStream('data/bus_data_1.csv')
-            .pipe(parseCSV({ delimiter: ',', from_line: 2, to_line: 1000, relax: true }))
+        var dataReadStream = fs.createReadStream('data/bus_data_1_ord.csv')
+            .pipe(parseCSV({ delimiter: ',', from_line: 2, relax: true }))
             .on('data', async (row) => {
                 try {
                     let busID = row[0]
@@ -31,10 +31,11 @@ amqp.connect('amqp://localhost', function (error0, connection) {
                     dataReadStream.pause()
                 
                     setTimeout(function () {
+                        console.log(busID)
                         channel.publish(exchange, busID, Buffer.from(row_c));
                         console.log("Pub sent %s", row_c);
                         dataReadStream.resume()
-                    }, 500);
+                    }, 10);
 
                 } catch (error) {
                     console.log(error)

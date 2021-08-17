@@ -1,4 +1,4 @@
-import grpc from "@grpc/grpc-js";
+// import grpc from "@grpc/grpc-js";
 //import { loadSync } from "@grpc/proto-loader";
 
 // const packageDef = loadSync("./proto/sub.proto", {});

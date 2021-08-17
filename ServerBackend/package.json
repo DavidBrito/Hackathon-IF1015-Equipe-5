@@ -12,7 +12,8 @@
     "@grpc/proto-loader": "^0.6.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "grpc": "^1.24.11"
+    "grpc": "^1.24.11",
+    "ws": "^8.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.12",

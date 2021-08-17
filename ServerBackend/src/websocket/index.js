@@ -3,8 +3,8 @@ import { Server as WebSocketServer } from 'ws';
 const wss = new WebSocketServer({port: 8080, path: '/myapp'});
 
 wss.on('connection', function(ws) {
-    console.log('new connection');
-    ws.send('Msg from server');
+    console.log('New ws connection!');
+    ws.send('Server: listening to requests');
 });
 
 ws.on('message', function(message) {

@@ -1,24 +1,50 @@
-import React from "react"
+import React, { useState } from "react";
 import {
     Grid,
     Button, 
-    InputAdornment, 
     AppBar, 
     Toolbar, 
-    IconButton, 
-    Typography 
-} from "@material-ui/core"
-import { Menu as MenuIcon} from "@material-ui/icons"
+    Typography,
+    TextField,
+} from "@material-ui/core";
+import axios from 'axios';
 
 const Layout = (props) => {
+    const [delay, setDelay] = useState(100);
+
     return (
         <>
             <AppBar position="static">
                 <Toolbar>
-                    <Typography variant="h6" style={{flexGrow: 1}}>
-                        MyBusFinder
-                    </Typography>
-                    <Button color="inherit">Config</Button>
+                    <Grid container>
+                        <Grid item xs={10}>
+                            <Typography variant="h6" style={{flexGrow: 1}}>
+                                MyBusFinder
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <TextField 
+                                label="Delay"
+                                variant="outlined"
+                                size="small"
+                                type="number"
+                                value={delay}
+                                onChange={(event) => setDelay(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Button 
+                                color="inherit" 
+                                onClick={() => {
+                                    axios.get(`http://localhost:3001/startStream/${delay}`).catch(e => {
+                                        console.log(e)
+                                    })
+                                }}
+                            > 
+                                Start
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </Toolbar>
             </AppBar>
             <Grid 

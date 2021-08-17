@@ -3,15 +3,15 @@
 var amqp = require('amqplib/callback_api');
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
-const packageDef = protoLoader.loadSync("proto/sub.proto", {});
+const packageDef = protoLoader.loadSync("proto/mybusfinder.proto", {});
 const grpcObject = grpc.loadPackageDefinition(packageDef);
-const busLocationService = grpcObject.busLocationService;
+const myBusFinder = grpcObject.myBusFinder;
 
 const server = new grpc.Server();
 
 server.bind("0.0.0.0:4000", grpc.ServerCredentials.createInsecure());
 
-server.addService(busLocationService.BusLocation.service, {
+server.addService(myBusFinder.BusLocation.service, {
   "consumeQueue": consumeQueue,
 });
 
@@ -20,7 +20,6 @@ console.log("Waiting for client...")
 server.start()
 
 function consumeQueue(call, callback) {
-
 
   amqp.connect('amqp://localhost', (error0, conn) => {
     if (error0) {
@@ -33,9 +32,8 @@ function consumeQueue(call, callback) {
       }
 
       var exchange = 'topic_transport';
-
       channel.assertExchange(exchange, 'topic', { durable: false });
-
+      
       channel.assertQueue('', { durable: false }, function (error2, q) {
         if (error2) {
           throw error2;
@@ -53,9 +51,6 @@ function consumeQueue(call, callback) {
         }, {
           noAck: true
         });
-
-        console.log("End...")
-
       });
 
     });

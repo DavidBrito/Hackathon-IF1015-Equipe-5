@@ -1,32 +1,22 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { 
     Grid, 
     TextField, 
     Button, 
-    InputAdornment, 
 } from "@material-ui/core"
 import {
     Autocomplete,
 } from "@material-ui/lab"
-import { AccountCircle} from "@material-ui/icons"
-import '../../utils/grpcClient';
-
 //Leaflet
 import L from 'leaflet';
 
 const Home = () => {
-//     // estado, funcao que altera o estado - valor inicial em 0
-//     const [currentPage, setCurrentPage] = useState(0);
-
-//     console.log(currentPage)
-//     // funcao setCurrentPage vai alterar o estado do componente pai
-//     const pages = [
-//         <Login setCurrentPage={setCurrentPage} />,
-//         <Mapa setCurrentPage={setCurrentPage} />
-//     ];
-
+    // estado, funcao que altera o estado - valor inicial em 0
     const [ map, setMap ] = useState();
     const [ selectedBus, setSelectedBus ] = useState('1111');
+    const [ connection, setConnection ] = useState();
+
+    const [ markers, setMarkers ] = useState();
     // permite controlar as renderizacoes do componente, sempre que renderizar chama useEffect()
     // se o mapa alterar useEffect vai ser acionado.
     useEffect(() => {
@@ -44,8 +34,11 @@ const Home = () => {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
+        const layerGroup = L.layerGroup().addTo(map);
+        
+        // marcacao no mapa
+        setMarkers(layerGroup);
         setMap(map);
-
 
         // Antes do userEffect renderizar aplica a funcao setMap(null) para nao ficar um mapa em cima do outro.
         return () => {
@@ -53,29 +46,41 @@ const Home = () => {
         }
     }, [setMap])
 
-    // funcao abre a conexao grpc com a fila de mensagens vindas do subscriptor
-    const handleBusLocation = (bus) => {
-        setSelectedBus(bus);
+    // atualiza os marcados do mapa
+    const latestMap = useRef(null);
+    latestMap.current = map;
+    useEffect(() => {
+        if (connection) {
+            connection.onmessage = (e) => {
+                const serverMessage = JSON.parse(e.data);
+                // ["1111","Empresa_13","1111","2017-12-01 06:56:05.360","1","1","286993","9110756","NULL","NULL","NULL","NULL","NULL"]
 
-        // const call = client.consumeQueue({ 'busid': '1111' }, (err, response) => {
-        //     console.log(err)
-        // });
+                if (["NULL", "TESTE", "0"].includes(serverMessage[6]) || ["NULL", "TESTE", "0"].includes(serverMessage[7])) return;
 
-        // call.on('data', (msg) => {
-        //     console.log(msg);
-        // });
+                const item = L.utm({x: serverMessage[6], y: serverMessage[7], zone: 25, southHemi: true});
+                const coord = item.latLng();
 
-        // call.on('end', function () {
-        //     console.log('Finished')
-        // });
+                setMarkers((prevMarkers) => {
+                    if (prevMarkers) {
+                        prevMarkers.clearLayers();
+                    }
+                    const marker = L.marker([coord.lat, coord.lng]).addTo(prevMarkers);
+                    return prevMarkers;
+                });
+            }
+            return () => connection.close();
+        }
+    }, [connection, setMarkers]);
 
-        // call.on('error', function (e) {
-        //     console.log('Error: ' + e)
-        // });
-
-        // call.on('status', (status) => {
-        //     console.log(status)
-        // });
+    const handleFindBus = () => {
+        const newConnection = new WebSocket('ws://localhost:3002/myapp');
+        //programação dos eventos (assíncronos)
+        newConnection.onopen = () => {
+            console.log('Connection Opened');
+            newConnection.send(selectedBus)
+        }
+        newConnection.onclose = () => console.log('Connection closed');
+        setConnection(newConnection);
     }
 
     return (
@@ -89,11 +94,14 @@ const Home = () => {
                         <Autocomplete
                             value={selectedBus}
                             onChange={(event, newValue) => {
-                                handleBusLocation(newValue)
+                                setSelectedBus(newValue);
                             }}
                             options={[
                                 '1111',
-                                '2222',
+                                '3333',
+                                '12049',
+                                '12452',
+                                '12113',
                             ]}
                             renderInput={(params) => 
                                 <TextField 
@@ -109,7 +117,7 @@ const Home = () => {
                         <Button 
                             size="large"
                             variant="contained" 
-                            onClick={() => console.log('ok')}
+                            onClick={handleFindBus}
                         >
                             Consultar
                         </Button>
