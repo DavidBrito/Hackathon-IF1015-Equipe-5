@@ -31,9 +31,9 @@ amqp.connect('amqp://localhost', function (error0, connection) {
                     dataReadStream.pause()
                 
                     setTimeout(function () {
-                        //console.log(busID)
+                        console.log(busID)
                         channel.publish(exchange, busID, Buffer.from(row_c));
-                        //console.log("Pub sent %s", row_c);
+                        console.log("Pub sent %s", row_c);
                         dataReadStream.resume()
                     }, 10);
 

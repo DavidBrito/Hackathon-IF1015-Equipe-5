@@ -12,6 +12,7 @@ import L from 'leaflet';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import getDistance from 'geolib/es/getDistance';
+import { toast } from 'react-toastify';
 
 const Home = () => {
     // estado, funcao que altera o estado - valor inicial em 0
@@ -44,7 +45,7 @@ const Home = () => {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.5,
-            radius: 3000
+            radius: 500
         }).addTo(map);
         // marcacao no mapa
         setMarkers(layerGroup);
@@ -80,9 +81,10 @@ const Home = () => {
                             { latitude: -8.0532143, longitude: -34.923340 },
                             { latitude: coord.lat, longitude: coord.lng })
                     )
-                }).pipe(filter(x => x < 3000));
+                }).pipe(filter(x => x < 500));
                 geoDistance.subscribe(x => {
                   console.log("Seu ônibus está à" + x/1000 + "km de distância");
+                  toast.warn("Seu ônibus está à" + x/1000 + "km de distância", {autoClose: 10000});
                 });
 
                 setMarkers((prevMarkers) => {
