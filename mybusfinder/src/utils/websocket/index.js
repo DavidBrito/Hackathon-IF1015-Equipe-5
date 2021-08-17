@@ -5,7 +5,6 @@ class WebSocket {
         connection.onopen = function () {
             //Envio de mensagens
             console.log('Connection Opened')
-            // connection.send('1111');
         }
         
         connection.onclose = function () {

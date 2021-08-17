@@ -4,7 +4,7 @@
   "description": "Repositório do projeto &lt;> da Hackahton realizada no curso de Sistemas Distribuídos do CIN/UFPE",
   "main": "DataStreamReader.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node DataStreamReader.js"
   },
   "repository": {
     "type": "git",

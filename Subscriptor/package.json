@@ -4,7 +4,7 @@
   "description": "Repositório do projeto &lt;> da Hackahton realizada no curso de Sistemas Distribuídos do CIN/UFPE",
   "main": "subscriptor.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node subscriptor.js"
   },
   "repository": {
     "type": "git",
