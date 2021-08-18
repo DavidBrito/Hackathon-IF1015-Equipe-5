@@ -1,5 +1,7 @@
 # Hackathon-IF1015-Equipe-5
-Repositório do projeto &lt;> da Hackahton realizada no curso de Sistemas Distribuídos do CIN/UFPE
+Repositório do projeto MyBusApp da Hackahton realizada no curso de Sistemas Distribuídos do CIN/UFPE.
+
+Branch do dia da apresentação: dia_apresentação
 
 Rabbit
 
